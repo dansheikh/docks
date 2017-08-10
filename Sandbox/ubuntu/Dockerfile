@@ -90,7 +90,7 @@ source "$HOME/.sdkman/bin/sdkman-init.sh" && \
 # Cleanup
 USER root
 RUN perl -0777 -i -pe 's/(export PATH.*?\n)(.*?)(?=\n?#THIS MUST BE.*)/$2$1/s' $HOME/.bashrc
-
+RUN perl -0777 -i -pe 's/(export MANPATH.*?\n)(export INFOPATH.*?\n)(.*?)(?=\n?#THIS MUST BE.*)/$3$1$2/s' $HOME/.bashrc
 RUN rm /var/tmp/Anaconda3-4.3.1-Linux-x86_64.sh
 
 # Configurations
