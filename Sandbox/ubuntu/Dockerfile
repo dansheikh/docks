@@ -5,11 +5,22 @@ ADD scripts /var/tmp/scripts
 # RUN bash /var/tmp/scripts/setup_user.sh
 RUN groupadd -r dev -g 1000 && useradd -u 1000 -r -g dev -m -d /home/dev -s /sbin/nologin dev && chmod 755 /home/dev
 ENV HOME /home/dev
+ENV TERM xterm
 RUN mkdir -p /var/www /var/log/httpd /var/log/postgresql
+
+# Base Setup
 RUN apt update -y && apt upgrade -y
-RUN apt install -y build-essential
+RUN apt install -y apt-transport-https ca-certificates
+RUN apt install -y apt-utils build-essential
 RUN apt install -y curl wget vim gcc clang git apache2 php7.0 php7.0-pgsql libapache2-mod-php postgresql postgresql-client postgresql-contrib phppgadmin supervisor ack-grep mongodb tar bzip2 zip unzip locales locales-all
 RUN apt clean all -y
+
+# Dotnet Core Setup
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.gpg
+RUN /bin/echo -e 'deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main' > /etc/apt/sources.list.d/dotnetdev.list && \
+apt update -y && \
+apt upgrade -y && \
+apt install -y dotnet-sdk-2.0.0
 
 # Locale Setup
 ENV LANGUAGE en_US.UTF-8
